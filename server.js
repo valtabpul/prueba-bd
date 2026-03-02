@@ -2,12 +2,12 @@ import express from 'express';
 import 'dotenv/config';
 import { pool } from './src/config/postgres.js';   // Tu archivo de Postgres
 import { connectDB as connectMongo } from './src/config/mongodb.js'; // Tu archivo de MongoDB
-//import pruebaRoutes from './src/routes/pruebaRoutes.js'
+import pruebaRoutes from './src/routes/pruebaRoutes.js'
 
 const app = express();
 app.use(express.json());
 
-//app.use('/api/prueba', pruebaRoutes); 
+app.use('/api/prueba', pruebaRoutes); 
 
 const startServer = async () => {
   try {

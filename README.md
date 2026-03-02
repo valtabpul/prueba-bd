@@ -1,8 +1,8 @@
-# 🚀 Sistema de Migración de Datos - PostgreSQL & MongoDB
+# Sistema de Migración de Datos - PostgreSQL & MongoDB
 
 Sistema de migración de datos desde archivos CSV a PostgreSQL y MongoDB con auditoría completa.
 
-## 📋 Requisitos Previos
+## Requisitos Previos
 
 - Node.js (v14 o superior)
 - PostgreSQL (v12 o superior)
@@ -45,7 +45,7 @@ O desde PostgreSQL:
 \i /ruta/al/proyecto/data/scriptData.sql
 ```
 
-## 🗃️ Estructura de la Base de Datos
+## Estructura de la Base de Datos
 
 ### PostgreSQL (Datos transaccionales)
 
@@ -61,7 +61,7 @@ O desde PostgreSQL:
 
 - **audit_logs**: Registro de todas las operaciones realizadas durante la migración
 
-## 🚀 Uso
+## Uso
 
 ### Iniciar el servidor
 
@@ -108,16 +108,16 @@ O usando herramientas como Postman, Thunder Client, etc.
 curl http://localhost:3000/api/prueba/migration/{runId}
 ```
 
-## 📊 Características
+## Características
 
-- ✅ Migración completa de datos CSV a PostgreSQL
-- ✅ Auditoría automática en MongoDB de cada operación
-- ✅ Prevención de duplicados mediante caché y constraints UNIQUE
-- ✅ Manejo de errores con logs detallados
-- ✅ Estadísticas completas de la migración
-- ✅ Seguimiento de migraciones mediante runId único
+- Migración completa de datos CSV a PostgreSQL
+- Auditoría automática en MongoDB de cada operación
+- Prevención de duplicados mediante caché y constraints UNIQUE
+- Manejo de errores con logs detallados
+- Estadísticas completas de la migración
+- Seguimiento de migraciones mediante runId único
 
-## 🔍 Verificar la migración
+## Verificar la migración
 
 ### Consultar datos en PostgreSQL
 
@@ -161,7 +161,7 @@ db.audit_logs.aggregate([
 ])
 ```
 
-## 📁 Estructura del Proyecto
+## Estructura del Proyecto
 
 ```
 prueba_BD/
@@ -186,7 +186,7 @@ prueba_BD/
 └── server.js
 ```
 
-## 🛠️ Tecnologías Utilizadas
+## Tecnologías Utilizadas
 
 - **Express.js**: Framework web
 - **PostgreSQL**: Base de datos relacional
@@ -195,21 +195,17 @@ prueba_BD/
 - **pg**: Driver de PostgreSQL
 - **mongoose**: ODM para MongoDB
 
-## ⚠️ Notas Importantes
+## Notas Importantes
 
 - La migración puede ejecutarse múltiples veces sin crear duplicados gracias a las restricciones UNIQUE
 - Cada ejecución genera un `runId` único para seguimiento
 - Los errores se registran en MongoDB pero no detienen la migración completa
 - El archivo CSV debe estar en la ruta `data/AM-prueba-desempeno-data_m4.csv`
 
-## 👨‍💻 Desarrollo
+## Desarrollo
 
 Para ejecutar en modo desarrollo:
 
 ```bash
 node --watch server.js
 ```
-
-## 📝 Licencia
-
-ISC

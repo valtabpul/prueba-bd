@@ -37,7 +37,7 @@ git pull origin main
 ### 4) Start the stack (build + run)
 From the project root (where `docker-compose.yml` is):
 ```bash
-docker compose up -d --build
+sudo docker compose up -d --build
 ```
 
 Check status/logs:

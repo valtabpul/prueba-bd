@@ -3,6 +3,7 @@ import path from "path";
 import csv from "csv-parser";
 import { migrar } from "../services/migrationService.js";
 import { AuditLog } from "../models/auditLog.js";
+import { getPostgresCounts } from "../services/reportService.js";
 
 export const migrateFromCSV = async (req, res) => {
   try {

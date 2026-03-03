@@ -1,93 +1,100 @@
-# Sistema de Migración de Datos - PostgreSQL & MongoDB
+# Data Migration System — PostgreSQL & MongoDB (Megastore)
 
-Sistema de migración de datos desde archivos CSV a PostgreSQL y MongoDB con auditoría completa.
+This project migrates Megastore data from a CSV file into **PostgreSQL** (transactional data) and stores **audit logs** in **MongoDB** (migration/auditing).
 
-## Requisitos Previos
+## Prerequisites
 
-- Node.js (v14 o superior)
-- PostgreSQL (v12 o superior)
-- MongoDB (v4 o superior)
+- Node.js (v14+)
+- PostgreSQL (v12+)
+- MongoDB (v4+)
 
-## 🔧 Configuración
+## Setup
 
-### 1. Instalar dependencias
+### 1) Install dependencies
 
 ```bash
 npm install
 ```
 
-### 2. Configurar variables de entorno
+### 2) Environment variables
 
-Crear un archivo `.env` en la raíz del proyecto con las siguientes variables:
+Create a `.env` file in the project root:
 
 ```env
-# Puerto del servidor
+# Server Port
 PORT=3000
 
 # PostgreSQL
-DATABASE_URL=postgresql://usuario:contraseña@localhost:5432/nombre_bd
+DATABASE_URL=postgresql://user:password@localhost:5432/db_name
 
 # MongoDB
-MONGODB_URI=mongodb://localhost:27017/nombre_bd
+MONGODB_URI=mongodb://localhost:27017/db_name
 ```
 
-### 3. Crear las tablas en PostgreSQL
+### 3) Create PostgreSQL tables
 
-Ejecutar el script SQL ubicado en `data/scriptData.sql`:
+Run the SQL script located at `data/scriptData.sql`:
 
 ```bash
-psql -U usuario -d nombre_bd -f data/scriptData.sql
+psql -U user -d db_name -f data/scriptData.sql
 ```
 
-O desde PostgreSQL:
+Or inside `psql`:
 
 ```sql
-\i /ruta/al/proyecto/data/scriptData.sql
+\i /path/to/project/data/scriptData.sql
 ```
 
-## Estructura de la Base de Datos
+## NPM Scripts
 
-### PostgreSQL (Datos transaccionales)
+- **Start server**
+  ```bash
+  npm start
+  ```
 
-- **customer**: Clientes (nombre, email, teléfono, dirección)
-- **product_category**: Categorías de productos
-- **supplier**: Proveedores
-- **product**: Productos con SKU, nombre, precio y categoría
-- **product_supplier**: Relación entre productos y proveedores
-- **transactions**: Transacciones de venta
-- **transaction_detail**: Detalles de cada transacción
+- **Start server (dev / auto-reload)**
+  ```bash
+  npm run dev
+  ```
 
-### MongoDB (Auditoría)
+- **Test DB connections**
+  ```bash
+  npm run test:connection
+  ```
 
-- **audit_logs**: Registro de todas las operaciones realizadas durante la migración
+## Running the Server
 
-## Uso
-
-### Iniciar el servidor
+Start the server in the VS Code terminal:
 
 ```bash
 npm start
 ```
 
-El servidor se iniciará en el puerto configurado (por defecto 3000).
+The API will run at:
 
-### Ejecutar la migración
+- `http://localhost:3000`
 
-Realizar una petición POST al endpoint de migración:
+## Migration
+
+### Run migration (VS Code terminal)
 
 ```bash
-curl -X POST http://localhost:3000/api/prueba/migrate
+curl -X POST "http://localhost:3000/api/prueba/migrate"
 ```
 
-O usando herramientas como Postman, Thunder Client, etc.
+### Run migration (Postman)
 
-### Respuesta de la migración
+- Method: **POST**
+- URL: `http://localhost:3000/api/prueba/migrate`
+- Body: *(none required)*
+
+### Example response
 
 ```json
 {
   "success": true,
-  "message": "Migración completada exitosamente",
-  "runId": "uuid-generado",
+  "message": "Migration completed successfully",
+  "runId": "generated-uuid",
   "statistics": {
     "totalRows": 79,
     "customers": 8,
@@ -102,66 +109,93 @@ O usando herramientas como Postman, Thunder Client, etc.
 }
 ```
 
-### Consultar el estado de una migración
+### Get migration status by runId (if implemented)
 
+**Terminal**
 ```bash
-curl http://localhost:3000/api/prueba/migration/{runId}
+curl "http://localhost:3000/api/prueba/migration/{runId}"
 ```
 
-## Características
+**Postman**
+- Method: **GET**
+- URL: `http://localhost:3000/api/prueba/migration/{runId}`
 
-- Migración completa de datos CSV a PostgreSQL
-- Auditoría automática en MongoDB de cada operación
-- Prevención de duplicados mediante caché y constraints UNIQUE
-- Manejo de errores con logs detallados
-- Estadísticas completas de la migración
-- Seguimiento de migraciones mediante runId único
+## BI (Business Intelligence) Endpoints
 
-## Verificar la migración
+> These endpoints provide analytics queries based on the migrated PostgreSQL data.
 
-### Consultar datos en PostgreSQL
+### 1) Supplier sales analysis
+
+**Terminal**
+```bash
+curl "http://localhost:3000/api/bi/suppliers/analysis"
+```
+
+**Postman**
+- Method: **GET**
+- URL: `http://localhost:3000/api/bi/suppliers/analysis`
+
+### 2) Customer purchase history
+
+**Terminal**
+```bash
+curl "http://localhost:3000/api/bi/customers/1/history"
+```
+
+**Postman**
+- Method: **GET**
+- URL: `http://localhost:3000/api/bi/customers/1/history`
+
+> Replace `1` with an existing `customerId`.
+
+### 3) Top products by category
+
+**Terminal**
+```bash
+curl "http://localhost:3000/api/bi/categories/1/top-products?limit=10"
+```
+
+**Postman**
+- Method: **GET**
+- URL: `http://localhost:3000/api/bi/categories/1/top-products?limit=10`
+
+> Replace `1` with an existing `categoryId`.
+
+## Database Structure
+
+### PostgreSQL (Transactional data)
+
+- **customer**: Customers (name, email, phone, address)
+- **product_category**: Product categories
+- **supplier**: Suppliers
+- **product**: Products (SKU, name, price, category)
+- **product_supplier**: Product-supplier relationship
+- **transactions**: Sales transactions
+- **transaction_detail**: Transaction line items
+
+### MongoDB (Auditing)
+
+- **audit_logs**: Stores migration operations and status logs
+
+## Verify the Migration
+
+### PostgreSQL checks
 
 ```sql
--- Contar registros
-SELECT 'customers' as tabla, COUNT(*) FROM customer
+SELECT 'customers' AS table, COUNT(*) FROM customer
 UNION ALL
-SELECT 'productos', COUNT(*) FROM product
+SELECT 'products', COUNT(*) FROM product
 UNION ALL
-SELECT 'transacciones', COUNT(*) FROM transactions;
-
--- Ver una transacción completa
-SELECT 
-  t.transaction_code,
-  t.transaction_date,
-  c.name as customer_name,
-  p.product_name,
-  td.quantity,
-  td.unit_price,
-  td.total_line_price
-FROM transactions t
-JOIN customer c ON t.customer_id = c.id
-JOIN transaction_detail td ON t.id = td.transaction_id
-JOIN product_supplier ps ON td.product_supplier_id = ps.id
-JOIN product p ON ps.product_id = p.id
-WHERE t.transaction_code = 'TXN-2001';
+SELECT 'transactions', COUNT(*) FROM transactions;
 ```
 
-### Consultar auditoría en MongoDB
+### MongoDB checks
 
 ```javascript
-// Conectar a MongoDB y ver los últimos logs
 db.audit_logs.find().sort({ createdAt: -1 }).limit(10)
-
-// Ver estadísticas por tabla
-db.audit_logs.aggregate([
-  { $group: { 
-    _id: { table: "$table", status: "$status" }, 
-    count: { $sum: 1 } 
-  }}
-])
 ```
 
-## Estructura del Proyecto
+## Project Structure
 
 ```
 prueba_BD/
@@ -178,34 +212,22 @@ prueba_BD/
 │   │   └── auditLog.js
 │   ├── routes/
 │   │   └── pruebaRoutes.js
-│   └── services/
-│       ├── auditService.js
-│       └── migrationService.js
+│   ├── services/
+│   │   ├── auditService.js
+│   │   └── migrationService.js
+│   └── routes/
+│       ├── biRoutes.js
+│       └── productRoutes.js
 ├── .env
 ├── package.json
 └── server.js
 ```
 
-## Tecnologías Utilizadas
+## Tech Stack
 
-- **Express.js**: Framework web
-- **PostgreSQL**: Base de datos relacional
-- **MongoDB**: Base de datos NoSQL para auditoría
-- **csv-parser**: Parser de archivos CSV
-- **pg**: Driver de PostgreSQL
-- **mongoose**: ODM para MongoDB
-
-## Notas Importantes
-
-- La migración puede ejecutarse múltiples veces sin crear duplicados gracias a las restricciones UNIQUE
-- Cada ejecución genera un `runId` único para seguimiento
-- Los errores se registran en MongoDB pero no detienen la migración completa
-- El archivo CSV debe estar en la ruta `data/AM-prueba-desempeno-data_m4.csv`
-
-## Desarrollo
-
-Para ejecutar en modo desarrollo:
-
-```bash
-node --watch server.js
-```
+- **Express.js (v5)** — Web framework
+- **PostgreSQL** — Relational database
+- **MongoDB** — NoSQL database (audit logs)
+- **csv-parser** — CSV parsing
+- **pg** — PostgreSQL driver
+- **mongoose** — MongoDB ODM

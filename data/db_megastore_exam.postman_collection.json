@@ -1,0 +1,43 @@
+{
+	"info": {
+		"_postman_id": "45d1338c-3a0f-4ccc-af32-c2e2c8ed7daf",
+		"name": "db_megastore_exam",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "52716594",
+		"_collection_link": "https://valtabpul-8215209.postman.co/workspace/valeria-taborda's-Workspace~5dc3bcfe-8db4-4c42-80e5-1658e0fbbe54/collection/52716594-45d1338c-3a0f-4ccc-af32-c2e2c8ed7daf?action=share&source=collection_link&creator=52716594"
+	},
+	"item": [
+		{
+			"name": "history",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "suppliers",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "products",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "New Request",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		}
+	]
+}

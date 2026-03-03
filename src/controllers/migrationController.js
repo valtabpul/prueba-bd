@@ -17,6 +17,7 @@ export const migrateFromCSV = async (req, res) => {
       });
     }
 
+    // 1) Leer CSV
     const records = [];
     await new Promise((resolve, reject) => {
       fs.createReadStream(csvPath)
@@ -26,34 +27,35 @@ export const migrateFromCSV = async (req, res) => {
         .on("error", reject);
     });
 
+    //Migrar
     const result = await migrar(records);
 
-    const pgCounts = await getPostgresCounts();
-    const mongoCounts = {
-    auditLogsForRun: await AuditLog.countDocuments({ runId: result.runId }),
-    auditLogsTotal: await AuditLog.countDocuments({}),
-    };
+    //Verificación (
+    const [pgCounts, auditLogsForRun, auditLogsTotal] = await Promise.all([
+      getPostgresCounts(),
+      AuditLog.countDocuments({ runId: result.runId }),
+      AuditLog.countDocuments({}),
+    ]);
 
-    res.json({
-    success: true,
-    message: "Migración completada",
-    runId: result.runId,
-    statistics: result.stats,
-    verify: {
-        postgresCounts: pgCounts,
-        mongoCounts,
-    },
-    });
-
-    res.json({
+    return res.status(200).json({
       success: true,
       message: "Migración completada",
       runId: result.runId,
       statistics: result.stats,
+      verify: {
+        postgresCounts: pgCounts,
+        mongoCounts: {
+          auditLogsForRun,
+          auditLogsTotal,
+        },
+      },
     });
   } catch (error) {
     console.error("❌ Error en la migración:", error);
-    res.status(500).json({
+
+    if (res.headersSent) return;
+
+    return res.status(500).json({
       success: false,
       error: error.message,
     });
@@ -80,21 +82,21 @@ export const getMigrationStatus = async (req, res) => {
       byTable: {},
     };
 
-    logs.forEach((log) => {
+    for (const log of logs) {
       if (!stats.byTable[log.table]) stats.byTable[log.table] = { success: 0, error: 0 };
       if (log.status === "SUCCESS") stats.byTable[log.table].success++;
       else stats.byTable[log.table].error++;
-    });
+    }
 
-    res.json({
+    return res.json({
       success: true,
       runId,
       statistics: stats,
-      logs: logs.slice(0, 200), // puedes subir o bajar este límite
+      logs: logs.slice(0, 200),
     });
   } catch (error) {
     console.error("❌ Error al obtener estado de migración:", error);
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
       error: error.message,
     });

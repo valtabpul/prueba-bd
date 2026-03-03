@@ -1,6 +1,5 @@
 import fs from "fs";
 import { pool } from "../config/postgres.js";
-
 export const initPostgresSchema = async () => {
   // read SQL file (drops + creates tables)
   const sql = fs.readFileSync("data/scriptData.sql", "utf8");

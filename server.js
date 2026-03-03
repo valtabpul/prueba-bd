@@ -8,42 +8,32 @@ import productRoutes from "./src/routes/productRoutes.js";
 import biRoutes from "./src/routes/biRoutes.js";
 import initRoutes from "./src/routes/initRoutes.js"
 
-console.log("typeof pruebaRoutes:", typeof pruebaRoutes);
-console.log("typeof productRoutes:", typeof productRoutes);
-console.log("typeof biRoutes:", typeof biRoutes);
 
 const app = express();
 
-app.get("/__ping", (req, res) => res.json({ ok: true, from: "original server.js" }));
-
 app.use(cors());
 app.use(express.json());
-//app.get("/__ping", (req, res) => res.json({ ok: true, from: "server.js" }));
-console.log("Mounting routes now...");
+console.log("Rutas...");
 app.use("/api/products", productRoutes);
 app.use("/api/bi", biRoutes);
 app.use("/api/prueba", pruebaRoutes);
-app.use("api/init-db",initRoutes)
-
-console.log("Routes mounted: /api/products, /api/bi, /api/prueba");
-
-
+app.use("/api",initRoutes)
 
 const startServer = async () => {
   try {
-    // 1) Probar Postgres
+    // Probar Postgres
     const res = await pool.query("SELECT NOW()");
     console.log("\nPostgres conectado. Hora:", res.rows[0].now);
-    console.log("=== RUNNING THIS server.js (WITH BI) ===");
 
-    // 2) Conectar Mongo
+    //Conectar Mongo
     await connectDB();
 
     const PORT = process.env.PORT || 3000;
     app.listen(PORT, () => {
-      console.log(`🚀 Servidor corriendo en puerto ${PORT}`);
-      console.log(`Endpoints:`);
-      console.log(`  POST  http://localhost:${PORT}/api/prueba/migrate`);
+      console.log(`✅ Servidor corriendo en puerto ${PORT}\n`);
+      console.log(`Endpoints:\n`);
+      console.log(`  POST http://localhost:${PORT}/api/init-db`)
+      console.log(`  POST http://localhost:${PORT}/api/prueba/migrate`);
       console.log(`  GET  http://localhost:${PORT}/api/bi/suppliers/analysis`);
       console.log(`  GET  http://localhost:${PORT}/api/bi/customers/1/history`)
       console.log(`  GET  http://localhost:${PORT}/api/bi/categories/1/top-products?limit=10`);

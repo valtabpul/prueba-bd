@@ -1,4 +1,4 @@
-import { initPostgresSchema } from "../services/dbInitService.js";
+import { initPostgresSchema } from "../services/initService.js";
 
 export const initDb = async (req, res) => {
   const result = await initPostgresSchema();

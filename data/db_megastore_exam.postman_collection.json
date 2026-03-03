@@ -13,7 +13,7 @@
 				"method": "POST",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:3001/api/init-db",
+					"raw": "http://localhost:3000/api/init-db",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -33,7 +33,7 @@
 				"method": "POST",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:3001/api/prueba/migrate",
+					"raw": "http://localhost:3000/api/prueba/migrate",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -52,7 +52,22 @@
 			"name": "history",
 			"request": {
 				"method": "GET",
-				"header": []
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/api/bi/customers/1/history",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"bi",
+						"customers",
+						"1",
+						"history"
+					]
+				}
 			},
 			"response": []
 		},
@@ -60,7 +75,21 @@
 			"name": "suppliers",
 			"request": {
 				"method": "GET",
-				"header": []
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/api/bi/suppliers/analysis",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"bi",
+						"suppliers",
+						"analysis"
+					]
+				}
 			},
 			"response": []
 		},
@@ -68,7 +97,28 @@
 			"name": "products",
 			"request": {
 				"method": "GET",
-				"header": []
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/api/bi/categories/1/top-products?limit=10",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"bi",
+						"categories",
+						"1",
+						"top-products"
+					],
+					"query": [
+						{
+							"key": "limit",
+							"value": "10"
+						}
+					]
+				}
 			},
 			"response": []
 		}

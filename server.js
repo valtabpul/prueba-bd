@@ -39,7 +39,7 @@ const startServer = async () => {
     // 4) Conectar Mongo
     await connectDB();
 
-    const PORT = process.env.PORT || 3000;
+    const PORT = process.env.PORT || 3001;
     app.listen(PORT, () => {
       console.log(`✅ Servidor corriendo en puerto ${PORT}\n`);
       console.log(`Endpoints:\n`);
@@ -47,9 +47,7 @@ const startServer = async () => {
       console.log(`  POST http://localhost:${PORT}/api/prueba/migrate`);
       console.log(`  GET  http://localhost:${PORT}/api/bi/suppliers/analysis`);
       console.log(`  GET  http://localhost:${PORT}/api/bi/customers/1/history`);
-      console.log(
-        `  GET  http://localhost:${PORT}/api/bi/categories/1/top-products?limit=10`
-      );
+      console.log(`  GET  http://localhost:${PORT}/api/bi/categories/1/top-products?limit=10`);
     });
   } catch (error) {
     console.error("❌ Error fatal iniciando el servidor:", error.message);

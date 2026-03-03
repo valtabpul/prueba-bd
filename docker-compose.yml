@@ -1,0 +1,53 @@
+services:
+  postgres:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: "1234"
+      POSTGRES_DB: postgres
+    ports:
+      - "5433:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  mongo:
+    image: mongo:7
+    ports:
+      - "27018:27017"
+    volumes:
+      - mongodata:/data/db
+    healthcheck:
+      test: ["CMD-SHELL", "mongosh --quiet --eval 'db.runCommand({ ping: 1 }).ok' | grep 1"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  api:
+    build: .
+    ports:
+      - "3001:3000"
+    environment:
+      PORT: "3000"
+      DATABASE_URL: "postgresql://postgres:1234@postgres:5432/megastore"
+      POSTGRES_ADMIN_URL: "postgresql://postgres:1234@postgres:5432/postgres"
+      POSTGRES_DB_NAME: "megastore"
+
+      # Tu código pide esta variable:
+      MONGODB_URI: "mongodb://mongo:27017/db_megastore_exam"
+
+      # (opcional) deja también esta por compatibilidad si alguna parte la usa:
+      MONGO_URI: "mongodb://mongo:27017/db_megastore_exam"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      mongo:
+        condition: service_healthy
+
+volumes:
+  pgdata:
+  mongodata:

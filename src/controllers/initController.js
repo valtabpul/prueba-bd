@@ -1,7 +1,7 @@
-import { initPostgresSchema } from "../services/initService.js";
+import { ensureDatabaseAndSchema} from "../services/initService.js";
 
 export const initDb = async (req, res) => {
-  const result = await initPostgresSchema();
+  const result = await ensureDatabaseAndSchema();
 
   if (!result.success) {
     return res.status(500).json(result);

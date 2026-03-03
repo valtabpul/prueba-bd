@@ -6,6 +6,7 @@ import { connectDB } from "./src/config/mongodb.js";
 import pruebaRoutes from "./src/routes/pruebaRoutes.js";
 import productRoutes from "./src/routes/productRoutes.js";
 import biRoutes from "./src/routes/biRoutes.js";
+import initRoutes from "./src/routes/initRoutes.js"
 
 console.log("typeof pruebaRoutes:", typeof pruebaRoutes);
 console.log("typeof productRoutes:", typeof productRoutes);
@@ -22,6 +23,7 @@ console.log("Mounting routes now...");
 app.use("/api/products", productRoutes);
 app.use("/api/bi", biRoutes);
 app.use("/api/prueba", pruebaRoutes);
+app.use("api/init-db",initRoutes)
 
 console.log("Routes mounted: /api/products, /api/bi, /api/prueba");
 

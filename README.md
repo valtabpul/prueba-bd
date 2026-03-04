@@ -12,6 +12,25 @@ This is the recommended way to run the project on another PC. It starts:
 - **MongoDB** (container)
 - **API (Express/Node)** (container)
 
+### 0) Install Docker Compose (Ubuntu)
+
+Docker Compose commands work on Ubuntu. Install the plugin package. Run in the terminal:
+
+**Update packages:**
+```bash
+sudo apt update
+```
+
+**Install Compose plugin:**
+```bash
+sudo apt install docker-compose-plugin
+```
+
+**Verify installation:**
+```bash
+docker compose version
+```
+
 ### 1) Requirements (Docker)
 - Docker Engine
 - Docker Compose plugin

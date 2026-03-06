@@ -11,7 +11,7 @@ export const logAudit = async ({ runId, action, table, record, status, error }) 
       error: error ? String(error) : null,
     });
   } catch (e) {
-    // No detengas tu migración si falla el log
-    console.error("⚠️ Error guardando trazabilidad en Mongo:", e.message);
+    // No detener migración si falla el log
+    console.error("!!Error guardando trazabilidad en Mongo:", e.message);
   }
 };

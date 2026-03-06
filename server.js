@@ -23,20 +23,19 @@ app.use("/api", initRoutes);
 
 const startServer = async () => {
   try {
-    // 1) Asegurar DB + schema ANTES de usar el pool
     const init = await ensureDatabaseAndSchema();
     if (!init.success) {
       throw new Error(init.error || "Fallo inicializando DB");
     }
 
-    // 2) Importar/crear pool después de que exista la DB
+    //crear pool después de que exista la DB
     const { pool } = await import("./src/config/postgres.js");
 
-    // 3) Probar Postgres
+    //Probar Postgres
     const res = await pool.query("SELECT NOW()");
     console.log("\nPostgres conectado. Hora:", res.rows[0].now);
 
-    // 4) Conectar Mongo
+    //Conectar Mongo
     await connectDB();
 
     const PORT = process.env.PORT || 3001;
